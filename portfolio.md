@@ -1,6 +1,6 @@
 # Yorick geoffre's portfolio
 
-Hi, my name is Yorick Geoffre and i'm a 4th year embedded enginerring student at UCA (université Clermont Auvergne), currently enrolled in the setsis course (embedded systems for signal processing).   
+Hi, my name is Yorick Geoffre and i'm a 4th year embedded enginerring student at UCA (université Clermont Auvergne), currently enrolled in the setsis master course (embedded systems for signal processing).   
 
 This document is a portfolio detailing the most interesting projects i have completed over the years, as part of my studies or hobbies.
 
@@ -120,3 +120,78 @@ The prcoessor of the orange pi 5, the onboard computer, is the RK3588S from rock
 <img src="https://media.discordapp.net/attachments/733969551137570849/1144362627791855616/IMG_20230824_220822_865.jpg?ex=65d7a9bf&is=65c534bf&hm=670dc24f3577fd00aa2ed57e7671c2fa997afab6cbb86b72b70bcf5c31241d03&=&format=webp&width=660&height=660"/>
 
 As you can see on this picture, when it is running the xrhs software the onboard computer only takes in about 9.5W, which is what you can excpect for most use cases. That means a total power draw of around 12W, which boosts the battery life to 5.8h hours.
+
+### The software
+
+
+
+## OS.LL
+OS.LL or quite literally OpenSource LinuxLaptop, is as the name implies a linux based laptop project. Over the years i have gotten quite frustrated with the current state of laptops and chromebooks, they have a weak battery life, are hard to maintain and repair, and they tend to be almost impossible to customize to fit one's needs.
+
+As i was developping the XRHS project, i started to really like the rockchip RK3588S processor as a very powerful and efficient arm based SOC. I bought another devboard based on this SOC which i use as a developper workstation for the XRHS project (using the same cpu means i don't have to deploy to the helmet to test changes). This little devboard is easily able to do most tasks a large x86 computer can, like:
+- browsing the web
+- watching 1080p60 videos
+- editing, and compiling code
+
+<img src="https://media.discordapp.net/attachments/733969551137570849/1192462222887239832/IMG_20240104_143848_241.jpg?ex=65d74e7c&is=65c4d97c&hm=ff4decbdd2720f6905bf8120ccffb8d3e617958ba0daf961679fd93212e246cd&=&format=webp&width=1173&height=660"/>
+<img src="https://media.discordapp.net/attachments/733969551137570849/1192462223344402583/IMG_20240104_143838_552.jpg?ex=65d74e7c&is=65c4d97c&hm=e82cabe9abc1c168927fff104049f2b3c473f6f7d55d0532153251e57296521b&=&format=webp&width=1173&height=660"/>
+
+It is overall much more capable than the comparable raspberry pi boards. This made me want to be able to use it in a laptop-like format, as a low power and low cost developpement platform.
+
+There are already commercial laptops built around the RK3588S, but they are very expensive (500€+) for what they are and they're generally manufactured by no-name chinese OEMs whom i do not trust with this type of hardware. This is why i started building my own from the ground up. 
+
+At the very least laptop would need:
+- a battery (i used 8 li-ion cells for that, as well as a custom battery pack manager circuit)
+<img src="https://media.discordapp.net/attachments/733969551137570849/1203379898505236480/IMG_20240203_174135_260.jpg?ex=65da1c5d&is=65c7a75d&hm=e5fa59d8eedc51ab3b6dca2052d86c30d80cde0a029bc0b355dc826491439ab9&=&format=webp&width=371&height=660"/>
+- a screen (a 15.6" 1080p EDP display was used here)
+- a processor mainboard (this would be a carrier board for the RK3588s based radxa brand SOM)
+- a power management board (this is the new polymaster board, which can charge and discharge the battery at up to 65W). Managing a 4 cell pack at these currents was especially difficult... not many ICs are meant to be used for this. I picked Texas instrument charging managers which are especially meant for laptop use.
+<img src="https://media.discordapp.net/attachments/733969551137570849/1203379898975264819/IMG_20240203_174111_260.jpg?ex=65da1c5d&is=65c7a75d&hm=cf3de81c9bd4c9f6bb99c8560fdbdee3b6bf9b0d815f8dadf7f86ac97fe69c74&=&format=webp&width=1173&height=660
+"/>
+- a keyboard (a custom low profile and tileable mechanical keyboard was made for this project)
+<img src="https://media.discordapp.net/attachments/733969551137570849/1189884989018488973/IMG_20231228_115757_175.jpg?ex=65d728c0&is=65c4b3c0&hm=adce0c70618a4b45200d2e59a18a37e73c86d1528c6a25f5f1b287cbac8e26ad&=&format=webp&width=1173&height=660
+"/>
+<img src="https://media.discordapp.net/attachments/733969551137570849/1189886327651565588/IMG_20231228_120316_836.jpg?ex=65d729ff&is=65c4b4ff&hm=6f8aadc5a1e2795dc10b717e748ce0557906263a8b62c314d9065041d354a9a0&=&format=webp&width=1173&height=660
+"/>
+
+So far the mainboard still isn't done, this is a work in progress. I'm trying to get the power stages to work properly first.
+
+## Minimagick
+
+This project was started because of a challenge given to me by the SlimeVR community. They were stating that a sub-5€ IMU based vr tracker was not possible, i felt like proving them wrong in a fun and useful way for everyone.
+
+For context such trackers are strapped to a user's joints and they report on their own absolute angle, this enables the slimeVR software to recreate the user's skeleton in-game, giving them full body tracking for various VR games.
+
+The current solutions for this software are based on the ESP8266 microcontroller, as well as an IMU of the user's choosing (usually a BMI160 or BNO085 on the high end), and a battery pack manager, the official modules look like this:
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.crowdsupply.com%2Fimg%2F17f9%2Fslimevr-update-13-10_jpg_open-graph.jpg&f=1&nofb=1&ipt=0ddd914e9b12c3bbc7bb6ecf11b439af723d12b7d67207778d745d422aeb4b07&ipo=images"/>
+
+They're quite bulky and make use of proven but outdated technology (in my opinion), but that is a formula that works as they've sold a ton of these things over the years.
+
+To get the cost down for my boards, i would have to cheap out on absolutely every component, without compromising on functionnality. I used a newer and very cheap IMU from STMicro, and instead of using an esp32, which sells for about 3€ a peice, i used a combination of a PUYA brand microcontroller, and a Ci2401 2.4ghz radio, which respectively sell for around 13 cents and 30 cents a peice at low volume.
+
+Armed with these cheap but uncommon components i made these boards:
+<img src="https://media.discordapp.net/attachments/733969551137570849/1165239076153212998/IMG_20231021_124336_909.jpg?ex=65d9c874&is=65c75374&hm=4b57ffa2012f52bd01aef9d3db17d1291120cbde08473501dcb32a9194aa00ae&=&format=webp&width=1173&height=660"/>
+
+And their receiver:
+<img src="https://media.discordapp.net/attachments/733969551137570849/1165640585776988211/IMG_20231022_151909_585.jpg?ex=65db3e64&is=65c8c964&hm=cdf1e4f36353195703bb4c06d2a4432b5de80f0ba11d8c398fc914b1d781868e&=&format=webp&width=1173&height=660"/>
+
+I made extensive use of quite obscure chinese chips in this project to get the cost down, as i often do. Doing this lets me experiment in my personnal project to earn experience on what works and what doesn't. And here for example i've learnt that these WCH brand CH32V203 usb enabled MCUs are horrible for anything usb related, because no usb library supports them, and register-based usb management is a pain.
+
+In the end the tracker's hardware was sound and passed all my tests. The final BOM cost of a single tracker was around 2.24€, way lower than the price limit given by the slimevr community. The fact that it uses that LSM IMU also makes it compatible with bosch's lineup of IMUs, which are more expensive but higher quality.
+
+It's not all perfect though, not everyone might know this but there is a big caveat on the parts i've chosen here: this board absolutely CANNOT be sold as a product. Why you ask? Because of FCC and RED regulations that's why. If i wanted to make this into a product i would need to make this be certified by the FCC and RED, which costs around 10k to 15k usd. This is definitely not worth it over using modules, which is why this was only a fun little hardware experiment and i didn't bother to develop the software for these fully, as there would be no benefit in doing so.
+
+## TScan
+
+TScan, or trelleborg scan, is a peice of software i wrote during my intership in the industrial company Trelleborg AB. The site where i worked at had recently purchased 10 industrial scanners from dell which came in the form of ruggedized windows tablets. These cost around 1500€ each with the scanner modules installed on their back. So that was a 15K usd investement for the company, you would excpect the tablet's manufacturer (dell) to provide good software support for such an expensive product... but you'd be wrong.
+
+So apparently the driver dell made for the zebra-brand scanner was bugged out on all versions, each with a different problem, our current one was the each scanned characters would come out one by one, each one taking a second. This was wholly unaccepteable as it broke all our scanner logic and took forever to complete a single scan.
+
+After some frustrating back-and-forth with the dell support, my manager at the company handed me over the subject and i started working on it. I immediately removed any dell software on the device to avoid issues, and contacted zebra to obtain their sdk for these specific OEM scanner modules. They were thankfully very quick to respond and open to giving me the software i needed without any extra NDAs to sign, unlike *some* companies...
+
+I then developped a new windows driver based on that sdk, and within 2 weeks we had an in-house software solution for these scanners which was very stable and met our needs, the solution was greenlit by our production testers and deployed within the month the issue arose. Needless to say the dell driver was still broken when i ended my internship... I can't show the driver code to anyone as it is currently closed source and trelleborg's property, but that was a fun embedded/system software project i had to take on.
+
+## Logitron
+
+Logitron is a custom logic analyzer project i made to help me figure out various digital logic issues in my prjects. This kind of instrument can cost a lot of money, especially at high frequencies. The Logitron is based on the RO2040 microcontroller made by raspberry pi. It is a highly versatile mcu which has two cores at 133mhz, and PIOs (programmable I/Os), which are invaluable in this project for their capacity to quickly acquire and send out digital data.
+
