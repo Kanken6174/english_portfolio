@@ -24,6 +24,12 @@ This project started when i finally had enough of my old brandt-brand alarm cloc
 
 It's an esp32-S2 based alarm clock that can connect over wifi to sync with a time server, it also has a web server that can be used to set the various alarms for up to an entire month, and any music can be used as an alarm as long as it is loaded as a .wav file on its microSD card.
 
+the web server:
+
+<img src="https://media.discordapp.net/attachments/733969551137570849/1207385806054891600/image.png?ex=65df74a8&is=65ccffa8&hm=4840c4c8eae2b87b702a044b7f532f2ea1660cff5f0cf55bc437bb5ae232331c&=&format=webp&quality=lossless"/>
+
+The date, temperature/humidity and TVOC display on the expansion port:
+
 <img src="./images/espwake/wake2.jpg"/>
 
 Optionnally, a 0.93 inch oled display can be connected to it's expansion port on the right, which will provide the user with the complete date as well as temperature, humidity, and air quality of the room in TVOC (the air quality changes the time LEDs's colors as well, from green to red to white).
@@ -38,6 +44,8 @@ The micro SD can be used to store the temperature, humidity, light level and air
 It is fully open source and can be found completed at the following git repository:
 
 https://github.com/Kanken6174/esp_wake
+
+(I use this devicve to wake up every day, if that says anything about how much i trust it to be reliable 😂 )
 
 ## Kamlibri
 As i was developping XRHS, i found myself needing to buy more and more costly usb camera modules, on which i had absolutely no control as far as additionnal feautres or picture enhancement went. This is why i took it upon myself to create a compact usb camera system that i could actually build myself, for cheap, and in a sustainable way (that is with parts i know i could obtain in large quantities).
@@ -123,7 +131,18 @@ As you can see on this picture, when it is running the xrhs software the onboard
 
 ### The software
 
+The software is the main highlight of this project. It is made out of three main parts:
+- a frontend, which is an opengl ES based 3d engine i made from scratch (for best performance accross even the worst-supported devices [otherwise i would've used vulkan for sure])
+- a video pipeline backend, which creates a cpu based rendering pipeline to handle both picture and processing logic.
+- a hardware manager system, with support for modules in the form of .so (shared object) libraries, which enable this software to be extended by third parties without any modifications to the core logic, which tends to be quite overwhelming in complexity.
 
+image of one of the example UIs, with a 3d object (a simple textured cube here) loaded in from external files, as well as an interactible 2D floating ui attached to a face of a 3D object using a scene graph system (you can move the cuber around):
+<img src="https://media.discordapp.net/attachments/733969551137570849/1169958833041461379/image.png?ex=65d87f12&is=65c60a12&hm=17dd666fec7de56169ee511faad372ac3f02b04e8466d512d656d4cb6b163d1b&=&format=webp&quality=lossless&width=810&height=456"/>
+
+the hud is a transparent quad that is rendered on top of everything as a transparent texture, the camera feed is the same thing but renderd before everything else, so it appears to be in the background. This approach is very efficient as almost all the processing is done on the gpu side.
+
+I don't have much to say on the "backend" system as it is harder to show off, but you can take a look at the source code if you're into that:   
+https://github.com/Kanken6174/XRHS
 
 ## OS.LL
 OS.LL or quite literally OpenSource LinuxLaptop, is as the name implies a linux based laptop project. Over the years i have gotten quite frustrated with the current state of laptops and chromebooks, they have a weak battery life, are hard to maintain and repair, and they tend to be almost impossible to customize to fit one's needs.
@@ -195,3 +214,7 @@ I then developped a new windows driver based on that sdk, and within 2 weeks we 
 
 Logitron is a custom logic analyzer project i made to help me figure out various digital logic issues in my prjects. This kind of instrument can cost a lot of money, especially at high frequencies. The Logitron is based on the RO2040 microcontroller made by raspberry pi. It is a highly versatile mcu which has two cores at 133mhz, and PIOs (programmable I/Os), which are invaluable in this project for their capacity to quickly acquire and send out digital data.
 
+<img src="https://cdn.discordapp.com/attachments/733969551137570849/1177699378853576836/IMG_20231124_205606_041.jpg?ex=65d8f884&is=65c68384&hm=3293f2f9427ead55ef39aabbd8dbabd2144c6298719400057d93c9a4cdae8a01&height=660"/>
+<img src="https://media.discordapp.net/attachments/733969551137570849/1207356371087925288/3D_PCB1_3_2024-02-14.png?ex=65df593e&is=65cce43e&hm=4c9d69547e4ae8276523234f1fcf05353507f5a6b40c9c91a3f3c456fe24468f&=&format=webp&quality=lossless&width=810&height=763"/>
+
+As of now it is fully working in multiple pc interface software like sigrok or guzman-logic.
